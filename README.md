@@ -70,7 +70,7 @@ We proceed to create a probability distribution vector for each row in our looku
 
 ```python
 # Creating a propability distibution vectors (for each row)
-P = (N+1).float()
+P = (N+1).float() #adding 1 for fake model smoothing
 P = P / P.sum(dim=1, keepdim=True)
 
 g = torch.Generator().manual_seed(2147483647) # generator to ensure deterministic values
@@ -133,8 +133,46 @@ print(f'Normalized NNL: {nnl/n:.4f}')
 ```
 
 ### Neural Networks 
-Given that the probability density lookup approach for the bigram language model was overly simplictic, we attempt to achieve better performance (minimized loss) using Neural networks.
+Given that the probability density lookup approach for the bigram language model was overly simplictic, we attempt to achieve better performance (minimized loss) using Neural Networks (NN).
 
+Our goal with NN is to find the set of parameters that minimize the NLL loss calculated in the above section. These said paramaters were stored in a lookup table format in the previous section but in this section, we would calculate/ tune the paramaters using a neural network to minimize the loss.
+
+In this case, our NN will still be a bigram character level language model that receives a single character as input and predicts the next character in the sequence based on how it was trained. 
+
+Stated differently, since we have the expected output, we have the loss function (NLL) and we can tune the network parameters to achieve lower loss.
+
+First we create our training sets using the dataset imported earlier and we convert them into torch tensors. We also initialize our weights to a 27x27 2-D array to model having 27 neurons in our hidden layer (single layer with 27 neurons).
+
+Then we go ahead and encode our inputs (each input is an integer that represents a corresponding letter. For example, `.` is `0`, `a` is `1`... `z` is `25`) to obe-hot encoded vectors where each letter is represented by a vector where corresponding position is 1 and everything else is 0 for all 27 letters in the alphabet. See table below.
+
+| Chars | Integer  |One Hot       | len(One Hot) |
+| ------| -------- |--------------|--------------|
+| .     | 1        |[1,0,0,...,0] | 27           |
+| ------| -------- |--------------|--------------|
+| a     | 1        |[0,1,0,...,0] | 27           |
+| ------| -------- |--------------|--------------|
+| b     | 2        |[0,0,1,...,0] | 27           |
+| ------| -------- |--------------|--------------|
+| z     | 26       |[0,0,0,...,1] | 27           |
+
+
+```python
+# creating training set of bigrams
+xs, ys = [], []
+for w in words:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1, ix2 = stoi[ch1], stoi[ch2]
+    xs.append(ix1); ys.append(ix2)
+xs = torch.tensor(xs)
+ys = torch.tensor(ys)
+num = xs.nelement()
+print(f"number of examples: {num}")
+
+# Initializing the network weights
+g = torch.Generator().manual_seed(2147483647) # ensuring a deterministic model
+W = torch.randn((27, 27), generator=g, requires_grad=True)
+```
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
