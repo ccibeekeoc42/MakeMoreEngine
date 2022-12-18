@@ -65,7 +65,7 @@ for i in range(27):
   style="display: inline-block; align: center; margin: 0 auto;">
 </p>
 
-We proceed to create a probability distribution vector for each row in our lookup table (2-D array) and sample items (characters) based off the distribution density. 
+We proceed to create a probability distribution vector for each row in our lookup table (2-D array) and sample items (characters) based off the distribution density. In the code below, we are doing this to generate only 5 words.
 
 ```python
 # Creating a propability distibution vectors (for each row)
@@ -85,7 +85,20 @@ for i in range(5):
       break
   print(''.join(out))
 ```
+Below are the 5 words generated. We can observe that this is a terrible sample/performance using just a plain lookup frequency table/ bigram tarining model.
 
+```
+mor.
+axx.
+minaymoryles.
+kondlaisah.
+anchshizarie.
+```
+
+Next we evaluate the performance of this probability distribution Bigram model by calculating the loss. The loss is a single number that tells us how good the model is at predicting based off the training. A good way to achieving this single loss number is know in statistics as the `Maximum Likelihood` and this is just the product of all the probabilities in our probability density table.
+
+For simplicity and convinence, we could be working with the log-likelihood which is the sum of the log of all probabilities in the probability density table. Keep in mind that log is a monotonic transformation where $log(1) \approx 0$ and $log(0) \approx - \infty$. In this case, since probabilities only take on values from $0 - 1$, if we take the log of a probability close to 1, we get something close to 0. Conversely, as we go lower in probability closer to 0, we get more negative and closer to $-\infty$.
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
+- [**Maximum Likelihood**](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation): A method of estimating the parameters of a probability distribution, given some observed data.
 - [**Probability Distribution**](https://www.google.com/search?q=probability+distribution): A mathematical function that describes the probability of different possible values of a variable.
