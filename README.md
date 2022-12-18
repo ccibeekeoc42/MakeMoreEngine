@@ -14,6 +14,7 @@ MakeMore is a character-level language model that treats each of its training ex
 We would explore several autoregressive models from Bigrams to Transformers (like GPT) of this character level predictions namely:
 
 - [A Bag of Words](https://github.com/ccibeekeoc42/MakeMoreEngine#a-bag-of-Words-bigrams)
+- [Neural Networks](https://github.com/ccibeekeoc42/MakeMoreEngine#neural-networks)
 
 
 ### A Bag of Words (Bigrams)
@@ -106,11 +107,11 @@ Since we are trying to measure the loss/ performance of our model, it is better 
   src="neg_log.png"
   alt="Computational graph"
   title="Optional title"
-  style="display: inline-block; align: center; margin: 0 auto; width:250px">
+  style="display: inline-block; align: center; margin: 0 auto; width:280px">
 </p>
 
 
-Below is the loss calculation code.
+Below is the loss calculation code.The goal is to examine the loss and minimize it. Maximizing the log likelihood is equivalent to minimizing the NLL (our loss function) which is also equivalent to minimizing the normalized-NLL.
 
 ```python
 # Calculating the loss
@@ -130,6 +131,10 @@ nnl = -log_likelihood
 print(f'NNL: {nnl:.4f}')
 print(f'Normalized NNL: {nnl/n:.4f}')
 ```
+
+### Neural Networks 
+Given that the probability density lookup approach for the bigram language model was overly simplictic, we attempt to achieve better performance (minimized loss) using Neural networks.
+
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
