@@ -17,7 +17,7 @@ We would explore several autoregressive models from Bigrams to Transformers (lik
 
 
 ### A Bag of Words (Bigrams)
-With the Bigram model, we predict the next character in the sequence using a simple lookup table containing bigram counts. We do this by looking at only two characters at a time. Given one character, we try to predict the next likely character. This is achieved with the lookup table of counts. These counts tells us the frequency of how each preceeding character relates to the next character in the sequence. This is a very simple and weak language model.
+With the Bigram model, we predict the next character in the sequence using a simple lookup table containing bigram counts. We do this by looking at only two characters at a time. Given one character, we try to predict the next likely character. This is achieved by using a 2-D array where each row represents the first character and each column is the second character. This means each entry in the array is the count of how many times the second character follows the first in each sequence. This is a very simple and weak language model.
 
 First we load our dataset which in this case is a list of peoples names. Then we create a bigram lookup table using the character `.` to denote both the end and the start of each sequence (name) in our dataset.
 
@@ -64,5 +64,6 @@ for i in range(27):
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto;">
 </p>
+
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
