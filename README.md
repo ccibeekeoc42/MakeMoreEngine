@@ -17,7 +17,7 @@ We would explore several autoregressive models from Bigrams to Transformers (lik
 
 
 ### A Bag of Words (Bigrams)
-With the Bigram model, we predict the next character in the sequence using a simple lookup table containing bigram counts. We do this by looking at only two characters at a time. Given one character, we try to predict the next likely character. This is achieved by using a 2-D array where each row represents the first character and each column is the second character. This means each entry in the array is the count of how many times the second character follows the first in each sequence. This is a very simple and weak language model.
+With the Bigram model, we predict the next character in the sequence using a simple lookup table containing bigram counts. We do this by looking at only two characters at a time. Given one character, we try to predict the next likely character. This is achieved by using a 2-D array where each row represents the first character and each column is the second character. This means each entry in the array is the count of how often the second character follows the first in each sequence. This is a very simple and weak language model.
 
 First we load our dataset which in this case is a list of peoples names. Then we create a bigram lookup table using the character `.` to denote both the end and the start of each sequence (name) in our dataset.
 
@@ -65,5 +65,27 @@ for i in range(27):
   style="display: inline-block; align: center; margin: 0 auto;">
 </p>
 
+We proceed to create a probability distribution vector for each row in our lookup table (2-D array) and sample items (characters) based off the distribution density. 
+
+```python
+# Creating a propability distibution vectors (for each row)
+P = (N+1).float()
+P = P / P.sum(dim=1, keepdim=True)
+
+g = torch.Generator().manual_seed(2147483647) # generator to ensure deterministic values
+
+for i in range(5):
+  out = []
+  ix = 0
+  while True:
+    p = P[ix]
+    ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item() # Drawing 1 sample based off the distribution
+    out.append(itos[ix])
+    if ix == 0: # breaks if we ever get back to the . character
+      break
+  print(''.join(out))
+```
+
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
+- [**Probability Distribution**](https://www.google.com/search?q=probability+distribution): A mathematical function that describes the probability of different possible values of a variable.
