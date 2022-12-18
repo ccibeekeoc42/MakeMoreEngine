@@ -97,7 +97,40 @@ anchshizarie.
 
 Next we evaluate the performance of this probability distribution Bigram model by calculating the loss. The loss is a single number that tells us how good the model is at predicting based off the training. A good way to achieving this single loss number is know in statistics as the `Maximum Likelihood` and this is just the product of all the probabilities in our probability density table.
 
-For simplicity and convinence, we could be working with the log-likelihood which is the sum of the log of all probabilities in the probability density table. Keep in mind that log is a monotonic transformation where $log(1) \approx 0$ and $log(0) \approx - \infty$. In this case, since probabilities only take on values from $0 - 1$, if we take the log of a probability close to 1, we get something close to 0. Conversely, as we go lower in probability closer to 0, we get more negative and closer to $-\infty$.
+For simplicity and convinence, we would be working with the log-likelihood which is the sum of the log of all probabilities in the probability density table. Keep in mind that log is a monotonic transformation where $log(1) \approx 0$ and $log(0) \approx - \infty$. In this case, since probabilities only take on values from $0 - 1$, if we take the log of a probability close to 1, we get something close to 0. Conversely, as we go lower in probability closer to 0, we get more negative and closer to $-\infty$.
+
+Since we are trying to measure the loss/ performance of our model, it is better to use the negative log-likelihood (NLL) instead as this signifies low is good and high (loss) is bad. See the image below. the NLL is just the negative of the log likelihood. The NLL can also be normalized for further simplicity.
+
+<p align="center">
+ <img
+  src="neg_log.png"
+  alt="Computational graph"
+  title="Optional title"
+  style="display: inline-block; align: center; margin: 0 auto; width:250px">
+</p>
+
+
+Below is the loss calculation code.
+
+```python
+# Calculating the loss
+log_likelihood = 0
+n = 0
+for w in words:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1, ix2 = stoi[ch1], stoi[ch2]
+    prob = P[ix1, ix2]
+    logProb = torch.log(prob)
+    log_likelihood += logProb
+    n += 1
+    #print(f'{ch1}{ch2}: {prob:.4f} {logProb:.4f}')
+print(f'Log Likelihood: {log_likelihood:.4f}')
+nnl = -log_likelihood
+print(f'NNL: {nnl:.4f}')
+print(f'Normalized NNL: {nnl/n:.4f}')
+```
+
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
 - [**Maximum Likelihood**](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation): A method of estimating the parameters of a probability distribution, given some observed data.
