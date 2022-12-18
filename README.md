@@ -14,7 +14,7 @@ MakeMore is a character-level language model that treats each of its training ex
 We would explore several autoregressive models from Bigrams to Transformers (like GPT) of this character level predictions namely:
 
 - [A Bag of Words](https://github.com/ccibeekeoc42/MakeMoreEngine#a-bag-of-Words-bigrams)
-- [Neural Networks](https://github.com/ccibeekeoc42/MakeMoreEngine#neural-networks)
+- [Neural Networks](https://github.com/ccibeekeoc42/MakeMoreEngine#neural-networks-bigrams)
 
 
 ### A Bag of Words (Bigrams)
@@ -132,7 +132,7 @@ print(f'NNL: {nnl:.4f}')
 print(f'Normalized NNL: {nnl/n:.4f}')
 ```
 
-### Neural Networks 
+### Neural Networks (Bigrams)
 Given that the probability density lookup approach for the bigram language model was overly simplictic, we attempt to achieve better performance (minimized loss) using Neural Networks (NN).
 
 Our goal with NN is to find the set of parameters that minimize the NLL loss calculated in the above section. These said paramaters were stored in a lookup table format in the previous section but in this section, we would calculate/ tune the paramaters using a neural network to minimize the loss.
@@ -182,7 +182,7 @@ At this point, we have taken a one-hot encoded input or sets of inputs, multipli
 
 Now the task is to find the optimal set of weights (W) such that the probabilities that come out of our neural network is good (minimized loss). We can achieve this by training the network and tuning the weights (gradient based optimization).
 
-Keep in mind that our neural net is a single linear layer followed by a softmax and our loss here is the NLL.
+Keep in mind that our neural net is a single linear layer followed by a softmax and our loss here is the NLL. This is because this is a classification problem rather than a regression where a typical loss function is the mean-squared error.
 
 ```python
 # Gradient descent
@@ -205,7 +205,28 @@ for k in range(100):
   # Updating weights
   W.data += -50 * W.grad
 ```
+it turns out that the explicit approach implemented in the PD method by counting optimizes the loss just as good as the graidient based approach done in this section with neural nets. This is because bigrams are just so simplistic that we could use either explict or gradient based approached.
 
+Next we sample with our new P achieved through the NN model. Turns out with the generator, we get same values as did our explict counting method.
+
+```python
+# Sampling from the neural nets
+g = torch.Generator().manual_seed(2147483647)
+for i in range(5):
+  out = []
+  ix = 0
+  while True:
+    xenc = F.one_hot(torch.tensor([ix]), num_classes=27).float()
+    logits = xenc @ W # log-counts
+    counts = logits.exp()
+    p = counts/ counts.sum(1, keepdims=True)
+
+    ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()
+    out.append(itos[ix])
+    if ix == 0:
+      break
+  print(''.join(out))
+```
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
