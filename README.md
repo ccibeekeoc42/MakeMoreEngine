@@ -62,7 +62,7 @@ for i in range(27):
   src="lookup.png"
   alt="Computational graph"
   title="Optional title"
-  style="display: inline-block; align: center; margin: 0 auto; width: 260px">
+  style="display: inline-block; align: center; margin: 0 auto;">
 </p>
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
