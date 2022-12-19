@@ -15,7 +15,7 @@ We would explore several autoregressive models from Bigrams to Transformers (lik
 
 - [A Bag of Words](https://github.com/ccibeekeoc42/MakeMoreEngine#a-bag-of-Words-bigrams)
 - [Neural Networks](https://github.com/ccibeekeoc42/MakeMoreEngine#neural-networks-bigrams)
-
+- [Multi Layer Peceptron](https://github.com/ccibeekeoc42/MakeMoreEngine#multi-layer-peceptron)
 
 ### A Bag of Words (Bigrams)
 With the Bigram model, we predict the next character in the sequence using a simple lookup table containing bigram counts. We do this by looking at only two characters at a time. Given one character, we try to predict the next likely character. This is achieved by using a 2-D array where each row represents the first character and each column is the second character. This means each entry in the array is the count of how often the second character follows the first in each sequence. This is a very simple and weak language model.
@@ -207,7 +207,7 @@ for k in range(100):
 ```
 it turns out that the explicit approach implemented in the PD method by counting optimizes the loss just as good as the graidient based approach done in this section with neural nets. This is because bigrams are just so simplistic that we could use either explict or gradient based approached.
 
-Next we sample with our new P achieved through the NN model. Turns out with the generator, we get same values as did our explict counting method.
+Next we sample with our new P achieved through the NN model. Turns out with the generator, we get same values as did our explict counting method. Indicating both methods are identical but the NN is a bit more flexible.
 
 ```python
 # Sampling from the neural nets
@@ -227,6 +227,9 @@ for i in range(5):
       break
   print(''.join(out))
 ```
+
+### Multi Layer Peceptron
+Based off the paper [**A Neural Probabilistic Language Model**](https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf), we would implement the use of MLPs to predict the next character in a sequence but this time, we would keep context on not only the single previous character.
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
