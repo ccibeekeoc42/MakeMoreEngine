@@ -29,6 +29,7 @@ We begin with our basic imports.
   import matplotlib.pyplot as plt
   %matplotlib inline
   ```
+
 Then we proceed to create our bigram lookup table containing frequency of each character pairs.
 
 ```python
@@ -240,6 +241,42 @@ In this section, we explore an MLP approach based off the paper [**A Neural Prob
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto;">
 </p>
+
+First we go ahead and build our dataset using our previous dater of names imported. For this specific example, we are using a prior context of 3 meaning we would consider three characters that come before the character we would like the predict.
+
+```python
+block_size = 3
+X, Y = [], []
+for w in words[:5]:
+  context = [0]*block_size
+  for ch in w+'.':
+    ix = stoi[ch]
+    X.append(context)
+    Y.append(ix)
+    context = context[1:] + [ix]
+X = torch.tensor(X)
+Y = torch.tensor(Y)
+```
+
+The above pice of code looks like this 
+
+<p align="center">
+ <img
+  src="itos.png"
+  alt="Computational graph"
+  title="Optional title"
+  style="display: inline-block; align: center; margin: 0 auto; max-width: 120px;">
+</p>
+
+<p align="center">
+ <img
+  src="stoi.png"
+  alt="Computational graph"
+  title="Optional title"
+  style="display: inline-block; align: center; margin: 0 auto; max-width: 120px;">
+</p>
+
+
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
