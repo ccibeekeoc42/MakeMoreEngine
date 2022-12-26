@@ -13,11 +13,11 @@ MakeMore is a character-level language model that treats each of its training ex
 
 We would explore several autoregressive models from Bigrams to Transformers (like GPT) of this character level predictions namely:
 
-- [A Bag of Words](https://github.com/ccibeekeoc42/MakeMoreEngine#a-bag-of-Words-bigrams)
-- [Neural Networks](https://github.com/ccibeekeoc42/MakeMoreEngine#neural-networks-bigrams)
+- [Bigram Method (Explicit Counting)](https://github.com/ccibeekeoc42/MakeMoreEngine#bigram-method-explicit-counting)
+- [Bigram Method (Neural Networks)](https://github.com/ccibeekeoc42/MakeMoreEngine#bigram-method-neural-networks)
 - [Multi Layer Peceptron](https://github.com/ccibeekeoc42/MakeMoreEngine#multi-layer-peceptron)
 
-### A Bag of Words (Bigrams)
+### Bigram Method (Explicit Counting)
 With the Bigram model, we predict the next character in the sequence using a simple lookup table containing bigram counts. We do this by looking at only two characters at a time. Given one character, we try to predict the next likely character. This is achieved by using a 2-D array where each row represents the first character and each column is the second character. This means each entry in the array is the count of how often the second character follows the first in each sequence. This is a very simple and weak language model.
 
 First we load our dataset which in this case is a list of peoples names. Then we create a bigram lookup table using the character `.` to denote both the end and the start of each sequence (name) in our dataset.
@@ -132,8 +132,8 @@ print(f'NNL: {nnl:.4f}')
 print(f'Normalized NNL: {nnl/n:.4f}')
 ```
 
-### Neural Networks (Bigrams)
-Given that the probability density lookup approach for the bigram language model was overly simplictic, we attempt to achieve better performance (minimized loss) using Neural Networks (NN).
+### Bigram Method (Neural Networks)
+Given that the above explicit counting lookup approach for the bigram language model was overly simplictic, we attempt to achieve better performance (minimized loss) using Neural Networks (NN).
 
 Our goal with NN is to find the set of parameters that minimize the NLL loss calculated in the above section. These said paramaters were stored in a lookup table format in the previous section but in this section, we would calculate/ tune the paramaters using a neural network to minimize the loss.
 
@@ -205,7 +205,7 @@ for k in range(100):
   # Updating weights
   W.data += -50 * W.grad
 ```
-it turns out that the explicit approach implemented in the PD method by counting optimizes the loss just as good as the graidient based approach done in this section with neural nets. This is because bigrams are just so simplistic that we could use either explict or gradient based approached.
+It turns out that the explicit approach implemented in the PD method by counting optimizes the loss just as good as the graidient based approach done in this section with neural nets. This is because bigrams are just so simplistic that we could use either explict or gradient based approached.
 
 Next we sample with our new P achieved through the NN model. Turns out with the generator, we get same values as did our explict counting method. Indicating both methods are identical but the NN is a bit more flexible.
 
@@ -229,7 +229,17 @@ for i in range(5):
 ```
 
 ### Multi Layer Peceptron
-Based off the paper [**A Neural Probabilistic Language Model**](https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf), we would implement the use of MLPs to predict the next character in a sequence but this time, we would keep context on not only the single previous character.
+The above two methods (Bigram Methods) are not very good because we only consider 1 item of context when predecting the next character. And they do not scale well if we decide to take in more characters into context. For example, taking 3 characters of context would lead to a `27 * 27 * 27` number of possibilities.
+
+In this section, we explore an MLP approach based off the paper [**A Neural Probabilistic Language Model**](https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf), to predict the next character in a sequence but this time, we would keep context on three or more prior characters in the sequence (as in the network architecture below).
+
+<p align="center">
+ <img
+  src="mlp.png"
+  alt="Computational graph"
+  title="Optional title"
+  style="display: inline-block; align: center; margin: 0 auto;">
+</p>
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
