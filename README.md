@@ -24,27 +24,27 @@ First we load our dataset which in this case is a list of peoples names. Then we
 
 We begin with our basic imports.
 
-  ```python
-    import torch
-    import matplotlib.pyplot as plt
-    %matplotlib inline
-  ```
+```python
+import torch
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
 Then we proceed to create our bigram lookup table containing frequency of each character pairs.
 
 ```python
-  words = open('names.txt', 'r').read().splitlines()
-  # Creating lookup table
-  N = torch.zeros((27, 27), dtype=torch.int32)
-  chars = sorted(list(set(''.join(words))))
-  stoi = {s:i+1 for i,s in enumerate(chars)}
-  stoi['.'] = 0
-  itos = {i:s for s,i in stoi.items()}
+words = open('names.txt', 'r').read().splitlines()
+# Creating lookup table
+N = torch.zeros((27, 27), dtype=torch.int32)
+chars = sorted(list(set(''.join(words))))
+stoi = {s:i+1 for i,s in enumerate(chars)}
+stoi['.'] = 0
+itos = {i:s for s,i in stoi.items()}
 
-  for w in words:
-    chs = ['.'] + list(w) + ['.']
-    for ch1, ch2 in zip(chs, chs[1:]):
-      ix1, ix2 = stoi[ch1], stoi[ch2]
-      N[ix1, ix2] += 1
+for w in words:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1, ix2 = stoi[ch1], stoi[ch2]
+    N[ix1, ix2] += 1
 ```
 
 The table created above can then be viewed using the piece of code below.
