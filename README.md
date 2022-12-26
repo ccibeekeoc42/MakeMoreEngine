@@ -265,7 +265,7 @@ The above pice of code would result in the dataset of the image below looking at
   src="dataset.png"
   alt="Computational graph"
   title="Optional title"
-  style="display: inline-block; align: center; margin: 0 auto; max-width: 150px;">
+  style="display: inline-block; align: center; margin: 0 auto; max-width: 120px;">
 </p>
 
 ### Glossary
