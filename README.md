@@ -258,14 +258,14 @@ X = torch.tensor(X)
 Y = torch.tensor(Y)
 ```
 
-The above pice of code looks like this 
-
+The above pice of code would result in the dataset of the image below looking at the first two names in our dataset `emma` and `olivia`. The left image is the string representation while the right images is it's corresponding integer representation. 
+<div>
 <p align="center">
  <img
   src="itos.png"
   alt="Computational graph"
   title="Optional title"
-  style="display: inline-block; align: center; margin: 0 auto; max-width: 120px;">
+  style="display: inline-block; align: center; margin: 0 auto; max-width: 120px; float: left;">
 </p>
 
 <p align="center">
@@ -275,8 +275,8 @@ The above pice of code looks like this
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto; max-width: 120px;">
 </p>
-
-
+</divS>
+<p></pS>
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
