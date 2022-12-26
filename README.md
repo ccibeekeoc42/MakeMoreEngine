@@ -24,11 +24,11 @@ First we load our dataset which in this case is a list of peoples names. Then we
 
 We begin with our basic imports.
 
-```python
-import torch
-import matplotlib.pyplot as plt
-%matplotlib inline
-```
+  ```python
+  import torch
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  ```
 Then we proceed to create our bigram lookup table containing frequency of each character pairs.
 
 ```python
