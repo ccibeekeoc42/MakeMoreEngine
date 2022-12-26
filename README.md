@@ -262,21 +262,11 @@ The above pice of code would result in the dataset of the image below looking at
 <div>
 <p align="center">
  <img
-  src="itos.png"
+  src="dataset.png"
   alt="Computational graph"
   title="Optional title"
-  style="display: inline-block; align: center; margin: 0 auto; max-width: 120px; float: left;">
+  style="display: inline-block; align: center; margin: 0 auto; max-width: 150px;">
 </p>
-
-<p align="center">
- <img
-  src="stoi.png"
-  alt="Computational graph"
-  title="Optional title"
-  style="display: inline-block; align: center; margin: 0 auto; max-width: 120px;">
-</p>
-</divS>
-<p></pS>
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
