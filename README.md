@@ -258,8 +258,8 @@ X = torch.tensor(X)
 Y = torch.tensor(Y)
 ```
 
-The above pice of code would result in the dataset of the image below looking at the first two names in our dataset `emma` and `olivia`. The left image is the string representation while the right images is it's corresponding integer representation. 
-<div>
+The above piece of code would result in the dataset of the image below looking at the first two names in our dataset `emma` and `olivia`. The left image is the string representation while the right images is it's corresponding integer representation. 
+
 <p align="center">
  <img
   src="dataset.png"
@@ -267,6 +267,25 @@ The above pice of code would result in the dataset of the image below looking at
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto; width: 230px;">
 </p>
+
+Next we woukd create the parameters of the MLP. We begin with our lookup table `C` which is a `27 x 2` table (for now) to embed our dataset which consists of a total of `27` characters (as there are 26 letters in the alphabet plus the `.` which serves as both our start and end tokens). Each of these `27` characters are embedded into a `2D` vector space. Then we go on to create both the weights and biases of the two layers of our MLP. The first layer has a total of `100` neurons and the second/ output layer has a total of `27` neurons representing each of our possible ouputs `a-z` or `.`.S
+
+```python
+g = torch.Generator().manual_seed(2147483647)
+# lookup table
+C = torch.randn((27, 2), generator=g)
+# First layer weights & biases
+W1 = torch.randn((6,100), generator=g)
+b1 = torch.randn(100, generator=g)
+# Second layer weights & biases
+W2 = torch.randn((100,27), generator=g)
+b2 = torch.randn(27, generator=g)
+# All parameters combined
+parameters = [C, W1, b1, W2, b2]
+# Ensuring we can backpropagate 
+for p in parameters:
+  p.requires_grad = True
+```
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
