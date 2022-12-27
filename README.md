@@ -335,7 +335,7 @@ As a quick aside, lets evaluate the loss of this MLP and understand how to decid
   src="images/learning_rate.png"
   alt="Computational graph"
   title="Learning Rate"
-  style="display: inline-block; align: center; margin: 0 auto; width: 230px;">
+  style="display: inline-block; align: center; margin: 0 auto;">
 </p>
 
 Back to the network, after validation on our dev set, we can see similar performance on the loss for both the training and dev set. So we can say the network generalizes well and is not memorizing as it has NOT seen the dev set prior. This also means the network is small and we could increase its hidden layer neurons (scaling up).
