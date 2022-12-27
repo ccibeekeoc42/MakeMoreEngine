@@ -245,17 +245,31 @@ In this section, we explore an MLP approach based off the paper [**A Neural Prob
 First we go ahead and build our dataset using our previous dater of names imported. For this specific example, we are using a prior context of 3 meaning we would consider three characters that come before the character we would like the predict.
 
 ```python
-block_size = 3
-X, Y = [], []
-for w in words[:5]:
-  context = [0]*block_size
-  for ch in w+'.':
-    ix = stoi[ch]
-    X.append(context)
-    Y.append(ix)
-    context = context[1:] + [ix]
-X = torch.tensor(X)
-Y = torch.tensor(Y)
+def build_dataset(words):
+  block_size = 3
+  X, Y = [], []
+  for w in words:
+    #print(w)
+    context = [0]*block_size
+    for ch in w+'.':
+      ix = stoi[ch]
+      X.append(context)
+      Y.append(ix)
+      #print(''.join(itos[i] for i in context), '--->', itos[ix] )
+      #print(''.join(str(i) for i in context), '--->', ix)
+      context = context[1:] + [ix]
+  X = torch.tensor(X)
+  Y = torch.tensor(Y)
+  print(X.shape, Y.shape)
+  return X, Y
+
+# Making train, validation, and test splits
+random.seed(42)
+random.shuffle(words)
+n1, n2 = int(0.8*len(words)), int(0.9*len(words))
+Xtr, Ytr = build_dataset(words[:n1])
+Xdev, Ydev = build_dataset(words[n1:n2])
+Xte, Yte = build_dataset(words[n2:])
 ```
 
 The above piece of code would result in the dataset of the image below looking at the first two names in our dataset `emma` and `olivia`. The left image is the string representation while the right images is it's corresponding integer representation. 
@@ -267,6 +281,9 @@ The above piece of code would result in the dataset of the image below looking a
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto; width: 230px;">
 </p>
+
+In the above code, we also split our data into train, dev/ validation, and test sets. A standard practice is to implement a `80-10-10` split respectively. The training set is used to tune the parameters of our models (weights, biases, lookup/embedding table). The dev or validation set is used to tune/ optimize the hyper parameters of the model (# of hidden layers, # of nodes per layer etc.) Finally, test split is used to evaluate the performance of the model. This should only be used sparringly or you risk overfitting by exposing the model to the test set too ofen.
+
 
 Next we woukd create the parameters of the MLP. We begin with our lookup table `C` which is a `27 x 2` table (for now) to embed our dataset which consists of a total of `27` characters (as there are 26 letters in the alphabet plus the `.` which serves as both our start and end tokens). Each of these `27` characters are embedded into a `2D` vector space. Then we go on to create both the weights and biases of the two layers of our MLP. The first layer has a total of `100` neurons and the second/ output layer has a total of `27` neurons representing each of our possible ouputs `a-z` or `.`.
 
@@ -287,17 +304,19 @@ for p in parameters:
   p.requires_grad = True
 ```
 
-Next we proceed with training our neural network by performing the forward pass, backward pass and update on mini-batches of the data.
+Next we proceed with training our neural network by performing the forward pass, backward pass and update on mini-batches of the data. Also we are using the cross enthropy classification method as our loss function but this is technically the negative log likelihood we are trying to minimize.
+
+Using minibatches helps us spped up the process as it is much better to have an approximate gradient and take many more steps than it is to have the exact gradient and take fewer steps.
 
 ```python
 for _ in range(1000):
   # minibatch construct
   ix = torch.randint(0, X.shape[0], (32,))
   # forward pass
-  emb = C[X[ix]]
-  h = torch.tanh(emb.view(-1, 6) @ W1 + b1)
-  logits = h @ W2 + b2
-  loss = F.cross_entropy(logits, Y[ix]) # NLL loss
+  emb = C[X[ix]] # (32, 3, 2) vector
+  h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100) vector
+  logits = h @ W2 + b2 # (100, 27) vector
+  loss = F.cross_entropy(logits, Y[ix]) # NLL loss. (27, 1) vector
   # backward pass
   for p in parameters:
     p.grad = None
@@ -308,6 +327,35 @@ for _ in range(1000):
 
 print(loss.item())
 ```
+
+As a quick aside, lets evaluate the loss of this MLP and understand how to decide on an optimal learning rate. We can see that an optimal learning rate is about `0.1`.
+
+<p align="center">
+ <img
+  src="images/learning_rate.png"
+  alt="Computational graph"
+  title="Learning Rate"
+  style="display: inline-block; align: center; margin: 0 auto; width: 230px;">
+</p>
+
+Back to the network, after validation on our dev set, we can see similar performance on the loss for both the training and dev set. So we can say the network generalizes well and is not memorizing as it has NOT seen the dev set prior. This also means the network is small and we could increase its hidden layer neurons (scaling up).
+
+We have a few knobs we can turne for performance:
+- The embeding/ lookup matrix `C`. We can increase from `27 x 2` to maby `27 x 8` adding more dimensions for learning.
+- The number of layers/ neurons in our network.
+- The number of context imput characters can be increased from `3` to maybe `6`.
+
+Next we visualize the model and se can see some learning happened. All the vowels seems to be clustered together indicating similarity and `q` and `g` seem to be outliers when it comes to names.
+
+<p align="center">
+ <img
+  src="images/visualize.png"
+  alt="Computational graph"
+  title="Learning Rate"
+  style="display: inline-block; align: center; margin: 0 auto; width: 230px;">
+</p>
+
+Finally, we can sample names from our training to see we are now getting better namelike words.
 
 
 ### Glossary
