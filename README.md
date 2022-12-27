@@ -61,7 +61,7 @@ for i in range(27):
 ```
 <p align="center">
  <img
-  src="lookup.png"
+  src="images/lookup.png"
   alt="Computational graph"
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto;">
@@ -105,7 +105,7 @@ Since we are trying to measure the loss/ performance of our model, it is better 
 
 <p align="center">
  <img
-  src="neg_log.png"
+  src="images/neg_log.png"
   alt="Computational graph"
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto; width:280px">
@@ -236,7 +236,7 @@ In this section, we explore an MLP approach based off the paper [**A Neural Prob
 
 <p align="center">
  <img
-  src="mlp.png"
+  src="images/mlp.png"
   alt="Computational graph"
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto;">
@@ -262,13 +262,13 @@ The above piece of code would result in the dataset of the image below looking a
 
 <p align="center">
  <img
-  src="dataset.png"
+  src="images/dataset.png"
   alt="Computational graph"
   title="Optional title"
   style="display: inline-block; align: center; margin: 0 auto; width: 230px;">
 </p>
 
-Next we woukd create the parameters of the MLP. We begin with our lookup table `C` which is a `27 x 2` table (for now) to embed our dataset which consists of a total of `27` characters (as there are 26 letters in the alphabet plus the `.` which serves as both our start and end tokens). Each of these `27` characters are embedded into a `2D` vector space. Then we go on to create both the weights and biases of the two layers of our MLP. The first layer has a total of `100` neurons and the second/ output layer has a total of `27` neurons representing each of our possible ouputs `a-z` or `.`.S
+Next we woukd create the parameters of the MLP. We begin with our lookup table `C` which is a `27 x 2` table (for now) to embed our dataset which consists of a total of `27` characters (as there are 26 letters in the alphabet plus the `.` which serves as both our start and end tokens). Each of these `27` characters are embedded into a `2D` vector space. Then we go on to create both the weights and biases of the two layers of our MLP. The first layer has a total of `100` neurons and the second/ output layer has a total of `27` neurons representing each of our possible ouputs `a-z` or `.`.
 
 ```python
 g = torch.Generator().manual_seed(2147483647)
@@ -286,6 +286,29 @@ parameters = [C, W1, b1, W2, b2]
 for p in parameters:
   p.requires_grad = True
 ```
+
+Next we proceed with training our neural network by performing the forward pass, backward pass and update on mini-batches of the data.
+
+```python
+for _ in range(1000):
+  # minibatch construct
+  ix = torch.randint(0, X.shape[0], (32,))
+  # forward pass
+  emb = C[X[ix]]
+  h = torch.tanh(emb.view(-1, 6) @ W1 + b1)
+  logits = h @ W2 + b2
+  loss = F.cross_entropy(logits, Y[ix]) # NLL loss
+  # backward pass
+  for p in parameters:
+    p.grad = None
+  loss.backward()
+  # update
+  for p in parameters:
+    p.data += -0.1*p.grad
+
+print(loss.item())
+```
+
 
 ### Glossary
 - [**Autoregressive Model**](https://www.google.com/search?q=auto+regressive+meaning): A statistical model thaqt predicts future values based on past values.
