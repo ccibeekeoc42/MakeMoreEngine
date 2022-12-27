@@ -352,7 +352,7 @@ Next we visualize the model and se can see some learning happened. All the vowel
   src="images/visualize.png"
   alt="Computational graph"
   title="Learning Rate"
-  style="display: inline-block; align: center; margin: 0 auto; width: 330px;">
+  style="display: inline-block; align: center; margin: 0 auto;">
 </p>
 
 Finally, we can sample names from our training to see we are now getting better namelike words.
